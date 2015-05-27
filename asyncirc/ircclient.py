@@ -12,6 +12,7 @@ if sys.hexversion < 0x03000000:
     BlockingIOError = socket.error
 else:
     import queue
+    from io import BlockingIOError
 
 class IRCClient(object):
     """Provides real-time multithreaded IRC Client communication
@@ -124,7 +125,7 @@ class IRCClient(object):
                 if data:
                     for line in data:
                         self._process_data(line.decode(encoding='UTF-8', errors='ignore'))
-            except BlockingIOError as e:
+            except (BlockingIOError, socket.error) as e:
                 pass
         logging.info("Receive loop stopped")
 
